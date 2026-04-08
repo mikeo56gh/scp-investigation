@@ -1,0 +1,7 @@
+{
+  "name": "scp-rca-tool",
+  "version": "1.0.0",
+  "description": "Saltend Chemicals Park — Root Cause Analysis Tool",
+  "private": true,
+  "engines": { "node": ">=18" }
+}
