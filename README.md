@@ -1,59 +1,47 @@
-# Saltend Chemicals Park — Root Cause Analysis Tool
+# Saltend Event Reporting Site
 
-AI-powered 5-Whys, root cause analysis, contributing factors and corrective actions.  
-No app installs needed — everything via browser.
+A static site providing two browser-based forms for the Saltend Chemicals Park event reporting workflow.
 
----
+## Structure
 
-## Deploy (browser only — no installs on your work laptop)
+- `index.html` — landing page with picker (witness statement vs. full investigation)
+- `account-of-events.html` — witness / person-involved statement form
+- `event-investigation.html` — full Level 1 / Level 2 investigation form
+- `vercel.json` — Vercel routing config (clean URLs, no trailing slash)
 
-### Step 1 — Put the files on GitHub
+All three pages are fully self-contained — no backend, no database, no API calls. Drafts are saved/loaded as JSON files locally on the user's device. PDF exports are generated client-side via jsPDF.
 
-1. Go to **github.com** → sign in (or create a free account)
-2. Click **+** (top right) → **New repository**
-3. Name it `scp-rca`, leave everything else as default → **Create repository**
-4. Click **uploading an existing file** (link on the empty repo page)
-5. **Drag the entire unzipped `scp-rca` folder contents** into the upload area
-   - You should see: `api/analyse.js`, `public/index.html`, `vercel.json`, `package.json`
-6. Click **Commit changes**
+## Deploying to Vercel
 
-### Step 2 — Deploy to Vercel
+### One-time setup
 
-1. Go to **vercel.com** → click **Sign up with GitHub** → authorise
-2. Click **Add New → Project** → find `scp-rca` → click **Import**
-3. Leave all settings as default → click **Deploy**
-4. Wait ~60 seconds — Vercel gives you a URL like `https://scp-rca-abc123.vercel.app`
+1. Create a new GitHub repo (e.g. `saltend-investigation-site`)
+2. Drag-drop the contents of this folder onto the GitHub repo's web UI to upload (or `git push`)
+3. On vercel.com, "Add New Project" → import the repo → click Deploy
+4. Vercel gives you a URL like `https://saltend-investigation-site.vercel.app`
 
-### Step 3 — Add the API key (keeps it secret)
+### Updating
 
-1. In Vercel → click your project → **Settings** (top nav) → **Environment Variables**
-2. Add a new variable:
-   - **Name:** `ANTHROPIC_API_KEY`
-   - **Value:** `sk-ant-api03-...` (your key from console.anthropic.com)
-   - **Environments:** tick all three (Production, Preview, Development)
-3. Click **Save**
-4. Go to **Deployments** tab → click the three dots on the latest deployment → **Redeploy**
+- Edit any HTML file in github.dev (or via the GitHub web editor)
+- Commit
+- Vercel auto-deploys within ~15 seconds
 
-Done. Share the Vercel URL with colleagues — the API key is never visible to them.
+### Custom domain (optional)
 
----
+If px Group IT can point a subdomain like `forms.px-group.com` at Vercel, add it under Project Settings → Domains.
 
-## How it works
+## Technical notes
 
-```
-scp-rca/
-├── api/
-│   └── analyse.js      ← Runs on Vercel's servers, holds the API key
-├── public/
-│   └── index.html      ← What colleagues see in their browser
-├── vercel.json         ← Routing config
-└── package.json
-```
+- All pages use Nunito Sans (Google Fonts) for body text and Georgia (system serif) for brand titles.
+- Logo is embedded as base64 in each file — works fully offline.
+- jsPDF and html2canvas are loaded from cdnjs. Without internet, the PDF export will fail but the form remains usable.
+- AI investigation assistant link points to `https://scp-investigation.vercel.app/` (separate deployment).
+- Both forms have a clickable brand block in their header that returns to `index.html`.
 
-The browser calls `/api/analyse` → Vercel's server calls Anthropic with the hidden key → results returned to browser. The key never touches the user's machine.
+## Browser support
+
+Modern browsers only — Chrome, Edge, Firefox, Safari, latest 2 versions. Internet Explorer is not supported (it's deprecated).
 
 ---
 
-## Updating the tool
-
-To make changes: edit files on GitHub directly (click the file → pencil icon → edit → commit). Vercel auto-redeploys within 30 seconds.
+© Saltend Chemicals Park Limited · px Group
